@@ -36,9 +36,10 @@ BOX = (3, 22, 56, 99)          # y0, y1, x0, x1  (반열림)
 MARGIN = 8                     # 좌우 참조 폭
 
 
-def make(A):
-    p = A[4].astype(float)
-    y0, y1, x0, x1 = BOX
+def make(A, idx=4, box=None):
+    # A[idx] 판때기의 글자 상자 box(기본 先攻)만 지운다 — 리플레이 판때기(176폭)도 이걸로(2026-10-13)
+    p = A[idx].astype(float)
+    y0, y1, x0, x1 = box or BOX
     out = p.copy()
     for y in range(y0, y1):
         left = p[y, x0 - MARGIN:x0]
@@ -57,7 +58,7 @@ def make(A):
     d = np.tile(bayer, (out.shape[0] // 4 + 1, out.shape[1] // 4 + 1))[:out.shape[0], :out.shape[1]]
     q = np.clip(np.rint(out + d), 2, 12).astype(np.uint8)
     # 글자 상자 밖은 원본 그대로 (테두리 손상 방지)
-    res = A[4].astype(np.uint8).copy()
+    res = A[idx].astype(np.uint8).copy()
     res[y0:y1, x0:x1] = q[y0:y1, x0:x1]
     return res
 

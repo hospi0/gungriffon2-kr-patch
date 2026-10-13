@@ -9,9 +9,15 @@ import os
 BASE = 'Gungriffon II (Japan)'
 SS_ROOT = os.path.join('F:' + os.sep, 'hospi', 'roms', 'ss roms')
 
-OUT_DIR = os.path.join(SS_ROOT, BASE)          # 패치 출력 (Track 02~44 + cue 가 이미 있다)
-ROM_DIR = os.path.join(OUT_DIR, BASE)          # ⚠️ 무수정 원본 = 중첩 폴더
+# ★2026-10-13: 원본이 중첩 없이 `F:\…\Gungriffon II (Japan)\` 에 그대로 있다(사용자가 다시 넣음) → 거기서 읽기만,
+#   패치 트랙은 프로젝트 work/out 으로(원본 덮어쓰기 방지).
+ROM_DIR = os.path.join(SS_ROOT, BASE)          # 무수정 원본(트랙 전부 + cue)
+OUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'work', 'out')
 TRACK1 = os.path.join(ROM_DIR, '%s (Track 01).bin' % BASE)
+# ★F: 의 Track 01 은 한글판으로 덮어쓴다(사용자 «덮어써», 2026-10-13) → 원본은 프로젝트에 백업해 두고 거기서 읽는다
+_BK = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'work', 'orig_track', '%s (Track 01).bin' % BASE)
+if os.path.exists(_BK):
+    TRACK1 = _BK
 
 # 영문 팬패치(오라클). 트랙이 한 .bin 에 다 들어간 통짜 이미지 — Track 01 은 앞부분.
 EN_DIR = os.path.join('C:' + os.sep, 'claude', 'roms', 'ss',

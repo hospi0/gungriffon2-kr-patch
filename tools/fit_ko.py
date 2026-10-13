@@ -71,7 +71,17 @@ def fit(text):
 
     ⚠️ 전각 변환을 문자열 전체에 걸면 토큰까지 `｛０Ａ｝` 가 된다 — 겪음.
     """
-    return BR.join(to_fullwidth(p) for p in text.split(BR))
+    return BR.join(squeeze(to_fullwidth(p)) for p in text.split(BR))
+
+
+# ★전프로젝트 규칙(표준 목록 전부): 문장부호 뒤 공백 1칸(반각·전각) 삭제 — 블루 시드 tools/build.py squeeze() 그대로(2026-10-13 적용)
+PUNCT = (",.!?:;)]}'\"~"
+         '、。，．！？：；）］｝」』】〉》”’…‥・·～〜♪♥')
+
+
+def squeeze(t):
+    import re
+    return re.sub('([' + re.escape(PUNCT) + '])[ 　](?![ 　])', r'\1', t)
 
 
 def main():
